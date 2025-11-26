@@ -100,6 +100,21 @@ def setBoto3Clients():
         sys.exit(1)
 
 
+"""
+    Cleanup functions
+"""
+def deleteVPC(vpc_id):
+    try:
+        print(f'- Deleting VPC: {vpc_id}')
+        
+        EC2_CLIENT.delete_vpc(VpcId=vpc_id)
+        
+        print(f'- VPC {vpc_id} deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete VPC {vpc_id}: {e}')
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
