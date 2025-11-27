@@ -100,11 +100,106 @@ def setBoto3Clients():
         sys.exit(1)
 
 
+"""
+    AWS architecture
+"""
+def createVPC(cidr_block='10.0.0.0/16', vpc_name='polystudent-vpc'):
+    try:
+        print(f'- Creating VPC: {vpc_name} with CIDR: {cidr_block}')
+        
+        vpc_response = EC2_CLIENT.create_vpc(
+            CidrBlock=cidr_block,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'vpc',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': vpc_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        vpc_id = vpc_response['Vpc']['VpcId']
+        
+        EC2_CLIENT.modify_vpc_attribute(
+            VpcId=vpc_id,
+            EnableDnsHostnames={'Value': True}
+        )
+        
+        EC2_CLIENT.modify_vpc_attribute(
+            VpcId=vpc_id,
+            EnableDnsSupport={'Value': True}
+        )
+        
+        print(f'- VPC created successfully with ID: {vpc_id}')
+        
+        return vpc_id
+        
+    except Exception as e:
+        print(f'- Failed to create VPC {vpc_id}: {e}')
+        sys.exit(1)
+
+
+def createSubnet(vpc_id, cidr_block, availability_zone, subnet_name, is_public=False):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create subnet: {e}')
+        sys.exit(1)
+
+
+def createInternetGateway(vpc_id, igw_name='polystudent-igw'):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create internet gateway: {e}')
+        sys.exit(1)
+
+
+def createNATGateway(subnet_id, nat_name):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create NAT: {e}')
+        sys.exit(1)
+
+
+def createRoutingTable(vpc_id, igw_id=None, nat_gateway_id=None, route_table_name='RouteTable', is_public=False):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create routing table: {e}')
+        sys.exit(1)
+
+
+def associateRouteTable(route_table_id, subnet_id):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to associate route table: {e}')
+        sys.exit(1)
+
+
+def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Security group for polystudent infrastructure'):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create security group: {e}')
+        sys.exit(1)
+        
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
     setBoto3Clients()
     print('*'*50 + '\n')
+
+    print('*'*14 + ' Infrastructure Start ' + '*'*14)
+    
+    vpc_id = createVPC('10.0.0.0/16', 'polystudent-vpc1')
 
 
 if __name__ == "__main__":
