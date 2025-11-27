@@ -218,7 +218,39 @@ def createInternetGateway(vpc_id, igw_name='polystudent-igw'):
 
 def createNATGateway(subnet_id, nat_name):
     try:
-        pass
+        print(f'- Creating NAT Gateway: {nat_name}')
+        
+        eip_response = EC2_CLIENT.allocate_address(Domain='vpc')
+        eip_allocation_id = eip_response['AllocationId']
+        
+        print(f'- Elastic IP allocated: {eip_response["PublicIp"]}')
+        
+        nat_response = EC2_CLIENT.create_nat_gateway(
+            SubnetId=subnet_id,
+            AllocationId=eip_allocation_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'natgateway',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': nat_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        nat_gateway_id = nat_response['NatGateway']['NatGatewayId']
+        
+        print(f'- Waiting for NAT Gateway {nat_name} to become available...')
+        waiter = EC2_CLIENT.get_waiter('nat_gateway_available')
+        waiter.wait(NatGatewayIds=[nat_gateway_id])
+        
+        print(f'- NAT Gateway created successfully: {nat_gateway_id}')
+        
+        return nat_gateway_id
+        
     except Exception as e:
         print(f'- Failed to create NAT: {e}')
         sys.exit(1)
@@ -226,7 +258,47 @@ def createNATGateway(subnet_id, nat_name):
 
 def createRoutingTable(vpc_id, igw_id=None, nat_gateway_id=None, route_table_name='RouteTable', is_public=False):
     try:
-        pass
+        print(f'- Creating Route Table: {route_table_name}')
+        
+        route_table_response = EC2_CLIENT.create_route_table(
+            VpcId=vpc_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'route-table',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': route_table_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        route_table_id = route_table_response['RouteTable']['RouteTableId']
+        
+        if is_public and igw_id:
+            EC2_CLIENT.create_route(
+                RouteTableId=route_table_id,
+                DestinationCidrBlock='0.0.0.0/0',
+                GatewayId=igw_id
+            )
+
+            print(f'- Public Route Table created with route to IGW: {route_table_id}')
+
+        elif not is_public and nat_gateway_id:
+            EC2_CLIENT.create_route(
+                RouteTableId=route_table_id,
+                DestinationCidrBlock='0.0.0.0/0',
+                NatGatewayId=nat_gateway_id
+            )
+
+            print(f'- Private Route Table created with route to NAT: {route_table_id}')
+        else:
+            print(f'- Route Table created without internet route: {route_table_id}')
+        
+        return route_table_id
+        
     except Exception as e:
         print(f'- Failed to create routing table: {e}')
         sys.exit(1)
@@ -234,11 +306,22 @@ def createRoutingTable(vpc_id, igw_id=None, nat_gateway_id=None, route_table_nam
 
 def associateRouteTable(route_table_id, subnet_id):
     try:
-        pass
+        print(f'- Associating Route Table {route_table_id} with Subnet {subnet_id}')
+        
+        association_response = EC2_CLIENT.associate_route_table(
+            RouteTableId=route_table_id,
+            SubnetId=subnet_id
+        )
+        
+        association_id = association_response['AssociationId']
+        print(f'- Route Table associated successfully: {association_id}')
+        
+        return association_id
+        
     except Exception as e:
         print(f'- Failed to associate route table: {e}')
         sys.exit(1)
-
+        
 
 def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Security group for polystudent infrastructure'):
     try:
