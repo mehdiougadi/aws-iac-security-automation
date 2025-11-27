@@ -191,6 +191,14 @@ def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Securi
         sys.exit(1)
         
 
+def createS3Bucket(bucket_name):
+    try:
+        pass
+    except Exception as e:
+        print(f'- Failed to create S3 bucket: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
