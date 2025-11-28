@@ -142,7 +142,63 @@ def deleteSubnets(vpc_id):
         
     except Exception as e:
         print(f'- Failed to delete Subnets: {e}')
+
+
+def deleteInternetGateways(vpc_id):
+    try:
+        print(f'- Deleting Internet Gateways in VPC: {vpc_id}')
         
+        igws = EC2_CLIENT.describe_internet_gateways(
+            Filters=[{'Name': 'attachment.vpc-id', 'Values': [vpc_id]}]
+        )
+        
+        for igw in igws['InternetGateways']:
+            igw_id = igw['InternetGatewayId']
+            print(f'- Detaching and deleting Internet Gateway: {igw_id}')
+            try:
+                EC2_CLIENT.detach_internet_gateway(InternetGatewayId=igw_id, VpcId=vpc_id)
+                EC2_CLIENT.delete_internet_gateway(InternetGatewayId=igw_id)
+            except Exception as e:
+                print(f'- Failed to delete {igw_id}: {e}')
+        
+        print('- Internet Gateways deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete Internet Gateways: {e}')
+
+
+def deleteNATGateways(vpc_id):
+    try:
+        print(f'- Deleting NAT Gateways in VPC: {vpc_id}')
+        
+        nat_gateways = EC2_CLIENT.describe_nat_gateways(
+            Filters=[
+                {'Name': 'vpc-id', 'Values': [vpc_id]},
+                {'Name': 'state', 'Values': ['available', 'pending']}
+            ]
+        )
+        
+        for nat in nat_gateways['NatGateways']:
+            nat_id = nat['NatGatewayId']
+            print(f'- Deleting NAT Gateway: {nat_id}')
+            EC2_CLIENT.delete_nat_gateway(NatGatewayId=nat_id)
+        
+        if nat_gateways['NatGateways']:
+            print('- Waiting for NAT Gateways to be deleted...')
+            time.sleep(30)
+            
+            waiter = EC2_CLIENT.get_waiter('nat_gateway_deleted')
+            for nat in nat_gateways['NatGateways']:
+                try:
+                    waiter.wait(NatGatewayIds=[nat['NatGatewayId']])
+                except:
+                    pass
+        
+        print('- NAT Gateways deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete NAT Gateways: {e}')
+
 
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
