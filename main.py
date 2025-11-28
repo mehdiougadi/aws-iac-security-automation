@@ -498,6 +498,11 @@ def main():
     print(f'S3 Bucket Name: {bucket_name}')
     print('*'*50 + '\n')
 
+    print('*'*14 + ' Result for Exercise 3  ' + '*'*12)
+
+    print('-'*22 + ' 3.1  ' + '-'*22)
+    print('-'*50)
+
 
 if __name__ == "__main__":
     main()
