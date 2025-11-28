@@ -385,7 +385,62 @@ def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Securi
 
 def createS3Bucket(bucket_name):
     try:
-        pass
+        print(f'- Creating S3 Bucket: {bucket_name}')
+        
+        try:
+            S3_CLIENT.create_bucket(Bucket=bucket_name, ObjectOwnership='BucketOwnerPreferred')
+            print(f'- Bucket created: {bucket_name}')
+        except Exception as e:
+            if 'BucketAlreadyOwnedByYou' in str(e):
+                print(f'- Bucket {bucket_name} already exists and is owned by you')
+            else:
+                raise e
+        
+        S3_CLIENT.put_bucket_acl(
+            Bucket=bucket_name,
+            ACL='private'
+        )
+        print('- ACL set to private')
+        
+        S3_CLIENT.put_public_access_block(
+            Bucket=bucket_name,
+            PublicAccessBlockConfiguration={
+                'BlockPublicAcls': True,
+                'IgnorePublicAcls': True,
+                'BlockPublicPolicy': True,
+                'RestrictPublicBuckets': True
+            }
+        )
+        print('- Public access blocked')
+        
+        S3_CLIENT.put_bucket_versioning(
+            Bucket=bucket_name,
+            VersioningConfiguration={'Status': 'Enabled'}
+        )
+        print('- Versioning enabled')
+        
+
+        encryption_config = {
+            'Rules': [
+                {
+                    'ApplyServerSideEncryptionByDefault': {
+                        'SSEAlgorithm': 'AES256'
+                    },
+                    'BucketKeyEnabled': False
+                }
+            ]
+        }
+        print('- Encryption configured with AES256')
+        
+        S3_CLIENT.put_bucket_encryption(
+            Bucket=bucket_name,
+            ServerSideEncryptionConfiguration=encryption_config
+        )
+        
+        print(f'- S3 Bucket created successfully: {bucket_name}')
+        
+        return bucket_name
+        
     except Exception as e:
         print(f'- Failed to create S3 bucket: {e}')
         sys.exit(1)
