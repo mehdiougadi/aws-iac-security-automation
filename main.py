@@ -476,7 +476,7 @@ def main():
 
     security_group_id = createSecurityGroup(vpc_id, 'polystudent-sg')
 
-    bucket_name = createS3Bucket('tp4testpolystudents345454')
+    bucket_name = createS3Bucket('tp4polystudents2051559')
 
     print('*'*50 + '\n')
     print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
@@ -493,6 +493,15 @@ def main():
     print(f'Private Route Table AZ2 ID: {private_route_table_az2}')
     print(f'Security Group ID: {security_group_id}')
     print('*'*50 + '\n')
+
+    print('*'*14 + ' Result for Exercise 2  ' + '*'*12)
+    print(f'S3 Bucket Name: {bucket_name}')
+    print('*'*50 + '\n')
+
+    print('*'*14 + ' Result for Exercise 3  ' + '*'*12)
+
+    print('-'*22 + ' 3.1  ' + '-'*22)
+    print('-'*50)
 
 
 if __name__ == "__main__":
