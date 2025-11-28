@@ -446,6 +446,42 @@ def createS3Bucket(bucket_name):
         sys.exit(1)
 
 
+def createVPCFlowLog(vpc_id, bucket_name, flow_log_name='polystudent-flowlog'):
+    try:
+        print(f'- Creating VPC Flow Log: {flow_log_name}')
+        
+        flow_log_response = EC2_CLIENT.create_flow_logs(
+            ResourceIds=[vpc_id],
+            ResourceType='VPC',
+            TrafficType='REJECT',
+            LogDestinationType='s3',
+            LogDestination=f'arn:aws:s3:::{bucket_name}',
+            TagSpecifications=[
+                {
+                    'ResourceType': 'vpc-flow-log',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': flow_log_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        flow_log_id = flow_log_response['FlowLogIds'][0]
+        
+        print(f'- VPC Flow Log created successfully: {flow_log_id}')
+        print('  - Traffic Type: REJECT')
+        print(f'  - Destination: s3://{bucket_name}')
+        
+        return flow_log_id
+        
+    except Exception as e:
+        print(f'- Failed to create VPC Flow Log: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
@@ -478,6 +514,8 @@ def main():
 
     bucket_name = createS3Bucket('tp4polystudents2051559')
 
+    flow_log_id = createVPCFlowLog(vpc_id, bucket_name, 'polystudent-flowlog')
+
     print('*'*50 + '\n')
     print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
     print(f'VPC ID: {vpc_id}')
@@ -501,6 +539,7 @@ def main():
     print('*'*14 + ' Result for Exercise 3  ' + '*'*12)
 
     print('-'*22 + ' 3.1  ' + '-'*22)
+    print(f'VPC Flow Log ID: {flow_log_id}')
     print('-'*50)
 
 

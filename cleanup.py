@@ -301,6 +301,7 @@ def cleanupAllVPCs():
             print(f'Cleaning up VPC: {vpc_id} ({vpc_name})')
             print(f'{"="*50}')
             
+            deleteVPCFlowLogs(vpc_id)
             deleteNATGateways(vpc_id)
             releaseElasticIPs()
             deleteSecurityGroups(vpc_id)
@@ -394,6 +395,35 @@ def deleteAllS3Buckets():
         
     except Exception as e:
         print(f'- Failed to cleanup S3 buckets: {e}')
+
+
+def deleteVPCFlowLogs(vpc_id):
+    try:
+        print(f'- Deleting VPC Flow Logs in VPC: {vpc_id}')
+        
+        flow_logs = EC2_CLIENT.describe_flow_logs(
+            Filters=[
+                {'Name': 'resource-id', 'Values': [vpc_id]}
+            ]
+        )
+        
+        if not flow_logs['FlowLogs']:
+            print('  - No flow logs found')
+            return
+        
+        flow_log_ids = [fl['FlowLogId'] for fl in flow_logs['FlowLogs']]
+        
+        print(f'  - Found {len(flow_log_ids)} flow log(s) to delete')
+        
+        for flow_log_id in flow_log_ids:
+            print(f'  - Deleting Flow Log: {flow_log_id}')
+        
+        EC2_CLIENT.delete_flow_logs(FlowLogIds=flow_log_ids)
+        
+        print('VPC Flow Logs deleted successfully')
+        
+    except Exception as e:
+        print(f'Failed to delete VPC Flow Logs: {e}')
 
 
 def main():
