@@ -325,7 +325,59 @@ def associateRouteTable(route_table_id, subnet_id):
 
 def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Security group for polystudent infrastructure'):
     try:
-        pass
+        print(f'- Creating Security Group: {sg_name}')
+        
+        sg_response = EC2_CLIENT.create_security_group(
+            GroupName=sg_name,
+            Description=sg_description,
+            VpcId=vpc_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'security-group',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': sg_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        security_group_id = sg_response['GroupId']
+        
+        ingress_rules = [
+            {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'CidrIp': '0.0.0.0/0', 'Description': 'SSH'},
+            {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'CidrIp': '0.0.0.0/0', 'Description': 'HTTP'},
+            {'IpProtocol': 'tcp', 'FromPort': 443, 'ToPort': 443, 'CidrIp': '0.0.0.0/0', 'Description': 'HTTPS'},
+            {'IpProtocol': 'tcp', 'FromPort': 53, 'ToPort': 53, 'CidrIp': '0.0.0.0/0', 'Description': 'DNS TCP'},
+            {'IpProtocol': 'udp', 'FromPort': 53, 'ToPort': 53, 'CidrIp': '0.0.0.0/0', 'Description': 'DNS UDP'},
+            {'IpProtocol': 'tcp', 'FromPort': 1433, 'ToPort': 1433, 'CidrIp': '0.0.0.0/0', 'Description': 'MSSQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 5432, 'ToPort': 5432, 'CidrIp': '0.0.0.0/0', 'Description': 'PostgreSQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 3306, 'ToPort': 3306, 'CidrIp': '0.0.0.0/0', 'Description': 'MySQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 3389, 'ToPort': 3389, 'CidrIp': '0.0.0.0/0', 'Description': 'RDP'},
+            {'IpProtocol': 'tcp', 'FromPort': 1514, 'ToPort': 1514, 'CidrIp': '0.0.0.0/0', 'Description': 'OSSEC'},
+            {'IpProtocol': 'tcp', 'FromPort': 9200, 'ToPort': 9300, 'CidrIp': '0.0.0.0/0', 'Description': 'ElasticSearch'},
+        ]
+        
+        print('- Adding ingress rules to Security Group')
+        for rule in ingress_rules:
+            EC2_CLIENT.authorize_security_group_ingress(
+                GroupId=security_group_id,
+                IpPermissions=[
+                    {
+                        'IpProtocol': rule['IpProtocol'],
+                        'FromPort': rule['FromPort'],
+                        'ToPort': rule['ToPort'],
+                        'IpRanges': [{'CidrIp': rule['CidrIp'], 'Description': rule['Description']}]
+                    }
+                ]
+            )
+        
+        print(f'- Security Group created successfully: {security_group_id}')
+        
+        return security_group_id
+        
     except Exception as e:
         print(f'- Failed to create security group: {e}')
         sys.exit(1)
