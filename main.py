@@ -143,6 +143,309 @@ def createVPC(cidr_block='10.0.0.0/16', vpc_name='polystudent-vpc'):
         sys.exit(1)
 
 
+def createSubnet(vpc_id, cidr_block, availability_zone, subnet_name, is_public=False):
+    try:
+        print(f'- Creating Subnet: {subnet_name} in {availability_zone}')
+        
+        subnet_response = EC2_CLIENT.create_subnet(
+            VpcId=vpc_id,
+            CidrBlock=cidr_block,
+            AvailabilityZone=availability_zone,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'subnet',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': subnet_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        subnet_id = subnet_response['Subnet']['SubnetId']
+        
+        if is_public:
+            EC2_CLIENT.modify_subnet_attribute(
+                SubnetId=subnet_id,
+                MapPublicIpOnLaunch={'Value': True}
+            )
+            print(f'- Public Subnet created with ID: {subnet_id}')
+        else:
+            print(f'- Private Subnet created with ID: {subnet_id}')
+        
+        return subnet_id
+        
+    except Exception as e:
+        print(f'- Failed to create subnet: {e}')
+        sys.exit(1)
+
+
+def createInternetGateway(vpc_id, igw_name='polystudent-igw'):
+    try:
+        print(f'- Creating Internet Gateway: {igw_name}')
+        
+        igw_response = EC2_CLIENT.create_internet_gateway(
+            TagSpecifications=[
+                {
+                    'ResourceType': 'internet-gateway',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': igw_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        igw_id = igw_response['InternetGateway']['InternetGatewayId']
+        
+        EC2_CLIENT.attach_internet_gateway(
+            InternetGatewayId=igw_id,
+            VpcId=vpc_id
+        )
+        
+        print(f'- Internet Gateway created and attached: {igw_id}')
+        
+        return igw_id
+        
+    except Exception as e:
+        print(f'- Failed to create internet gateway: {e}')
+        sys.exit(1)
+
+
+def createNATGateway(subnet_id, nat_name):
+    try:
+        print(f'- Creating NAT Gateway: {nat_name}')
+        
+        eip_response = EC2_CLIENT.allocate_address(Domain='vpc')
+        eip_allocation_id = eip_response['AllocationId']
+        
+        print(f'- Elastic IP allocated: {eip_response["PublicIp"]}')
+        
+        nat_response = EC2_CLIENT.create_nat_gateway(
+            SubnetId=subnet_id,
+            AllocationId=eip_allocation_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'natgateway',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': nat_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        nat_gateway_id = nat_response['NatGateway']['NatGatewayId']
+        
+        print(f'- Waiting for NAT Gateway {nat_name} to become available...')
+        waiter = EC2_CLIENT.get_waiter('nat_gateway_available')
+        waiter.wait(NatGatewayIds=[nat_gateway_id])
+        
+        print(f'- NAT Gateway created successfully: {nat_gateway_id}')
+        
+        return nat_gateway_id
+        
+    except Exception as e:
+        print(f'- Failed to create NAT: {e}')
+        sys.exit(1)
+
+
+def createRoutingTable(vpc_id, igw_id=None, nat_gateway_id=None, route_table_name='RouteTable', is_public=False):
+    try:
+        print(f'- Creating Route Table: {route_table_name}')
+        
+        route_table_response = EC2_CLIENT.create_route_table(
+            VpcId=vpc_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'route-table',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': route_table_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        route_table_id = route_table_response['RouteTable']['RouteTableId']
+        
+        if is_public and igw_id:
+            EC2_CLIENT.create_route(
+                RouteTableId=route_table_id,
+                DestinationCidrBlock='0.0.0.0/0',
+                GatewayId=igw_id
+            )
+
+            print(f'- Public Route Table created with route to IGW: {route_table_id}')
+
+        elif not is_public and nat_gateway_id:
+            EC2_CLIENT.create_route(
+                RouteTableId=route_table_id,
+                DestinationCidrBlock='0.0.0.0/0',
+                NatGatewayId=nat_gateway_id
+            )
+
+            print(f'- Private Route Table created with route to NAT: {route_table_id}')
+        else:
+            print(f'- Route Table created without internet route: {route_table_id}')
+        
+        return route_table_id
+        
+    except Exception as e:
+        print(f'- Failed to create routing table: {e}')
+        sys.exit(1)
+
+
+def associateRouteTable(route_table_id, subnet_id):
+    try:
+        print(f'- Associating Route Table {route_table_id} with Subnet {subnet_id}')
+        
+        association_response = EC2_CLIENT.associate_route_table(
+            RouteTableId=route_table_id,
+            SubnetId=subnet_id
+        )
+        
+        association_id = association_response['AssociationId']
+        print(f'- Route Table associated successfully: {association_id}')
+        
+        return association_id
+        
+    except Exception as e:
+        print(f'- Failed to associate route table: {e}')
+        sys.exit(1)
+        
+
+def createSecurityGroup(vpc_id, sg_name='polystudent-sg', sg_description='Security group for polystudent infrastructure'):
+    try:
+        print(f'- Creating Security Group: {sg_name}')
+        
+        sg_response = EC2_CLIENT.create_security_group(
+            GroupName=sg_name,
+            Description=sg_description,
+            VpcId=vpc_id,
+            TagSpecifications=[
+                {
+                    'ResourceType': 'security-group',
+                    'Tags': [
+                        {
+                            'Key': 'Name',
+                            'Value': sg_name
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        security_group_id = sg_response['GroupId']
+        
+        ingress_rules = [
+            {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'CidrIp': '0.0.0.0/0', 'Description': 'SSH'},
+            {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'CidrIp': '0.0.0.0/0', 'Description': 'HTTP'},
+            {'IpProtocol': 'tcp', 'FromPort': 443, 'ToPort': 443, 'CidrIp': '0.0.0.0/0', 'Description': 'HTTPS'},
+            {'IpProtocol': 'tcp', 'FromPort': 53, 'ToPort': 53, 'CidrIp': '0.0.0.0/0', 'Description': 'DNS TCP'},
+            {'IpProtocol': 'udp', 'FromPort': 53, 'ToPort': 53, 'CidrIp': '0.0.0.0/0', 'Description': 'DNS UDP'},
+            {'IpProtocol': 'tcp', 'FromPort': 1433, 'ToPort': 1433, 'CidrIp': '0.0.0.0/0', 'Description': 'MSSQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 5432, 'ToPort': 5432, 'CidrIp': '0.0.0.0/0', 'Description': 'PostgreSQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 3306, 'ToPort': 3306, 'CidrIp': '0.0.0.0/0', 'Description': 'MySQL'},
+            {'IpProtocol': 'tcp', 'FromPort': 3389, 'ToPort': 3389, 'CidrIp': '0.0.0.0/0', 'Description': 'RDP'},
+            {'IpProtocol': 'tcp', 'FromPort': 1514, 'ToPort': 1514, 'CidrIp': '0.0.0.0/0', 'Description': 'OSSEC'},
+            {'IpProtocol': 'tcp', 'FromPort': 9200, 'ToPort': 9300, 'CidrIp': '0.0.0.0/0', 'Description': 'ElasticSearch'},
+        ]
+        
+        print('- Adding ingress rules to Security Group')
+        for rule in ingress_rules:
+            EC2_CLIENT.authorize_security_group_ingress(
+                GroupId=security_group_id,
+                IpPermissions=[
+                    {
+                        'IpProtocol': rule['IpProtocol'],
+                        'FromPort': rule['FromPort'],
+                        'ToPort': rule['ToPort'],
+                        'IpRanges': [{'CidrIp': rule['CidrIp'], 'Description': rule['Description']}]
+                    }
+                ]
+            )
+        
+        print(f'- Security Group created successfully: {security_group_id}')
+        
+        return security_group_id
+        
+    except Exception as e:
+        print(f'- Failed to create security group: {e}')
+        sys.exit(1)
+        
+
+def createS3Bucket(bucket_name):
+    try:
+        print(f'- Creating S3 Bucket: {bucket_name}')
+        
+        try:
+            S3_CLIENT.create_bucket(Bucket=bucket_name, ObjectOwnership='BucketOwnerPreferred')
+            print(f'- Bucket created: {bucket_name}')
+        except Exception as e:
+            if 'BucketAlreadyOwnedByYou' in str(e):
+                print(f'- Bucket {bucket_name} already exists and is owned by you')
+            else:
+                raise e
+        
+        S3_CLIENT.put_bucket_acl(
+            Bucket=bucket_name,
+            ACL='private'
+        )
+        print('- ACL set to private')
+        
+        S3_CLIENT.put_public_access_block(
+            Bucket=bucket_name,
+            PublicAccessBlockConfiguration={
+                'BlockPublicAcls': True,
+                'IgnorePublicAcls': True,
+                'BlockPublicPolicy': True,
+                'RestrictPublicBuckets': True
+            }
+        )
+        print('- Public access blocked')
+        
+        S3_CLIENT.put_bucket_versioning(
+            Bucket=bucket_name,
+            VersioningConfiguration={'Status': 'Enabled'}
+        )
+        print('- Versioning enabled')
+        
+
+        encryption_config = {
+            'Rules': [
+                {
+                    'ApplyServerSideEncryptionByDefault': {
+                        'SSEAlgorithm': 'AES256'
+                    },
+                    'BucketKeyEnabled': False
+                }
+            ]
+        }
+        print('- Encryption configured with AES256')
+        
+        S3_CLIENT.put_bucket_encryption(
+            Bucket=bucket_name,
+            ServerSideEncryptionConfiguration=encryption_config
+        )
+        
+        print(f'- S3 Bucket created successfully: {bucket_name}')
+        
+        return bucket_name
+        
+    except Exception as e:
+        print(f'- Failed to create S3 bucket: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
@@ -152,6 +455,44 @@ def main():
     print('*'*14 + ' Infrastructure Start ' + '*'*14)
     
     vpc_id = createVPC('10.0.0.0/16', 'polystudent-vpc1')
+    igw_id = createInternetGateway(vpc_id, 'polystudent-igw')
+    
+    public_subnet_az1 = createSubnet(vpc_id, '10.0.1.0/24', 'us-east-1a', 'PublicSubnetAZ1', is_public=True)
+    public_subnet_az2 = createSubnet(vpc_id, '10.0.2.0/24', 'us-east-1b', 'PublicSubnetAZ2', is_public=True)
+    private_subnet_az1 = createSubnet(vpc_id, '10.0.3.0/24', 'us-east-1a', 'PrivateSubnetAZ1', is_public=False)
+    private_subnet_az2 = createSubnet(vpc_id, '10.0.4.0/24', 'us-east-1b', 'PrivateSubnetAZ2', is_public=False)
+
+    nat_gateway_az1 = createNATGateway(public_subnet_az1, 'NATGatewayAZ1')
+    nat_gateway_az2 = createNATGateway(public_subnet_az2, 'NATGatewayAZ2')
+    
+    public_route_table = createRoutingTable(vpc_id, igw_id=igw_id, route_table_name='PublicRouteTable', is_public=True)
+    private_route_table_az1 = createRoutingTable(vpc_id, nat_gateway_id=nat_gateway_az1, route_table_name='PrivateRouteTableAZ1', is_public=False)
+    private_route_table_az2 = createRoutingTable(vpc_id, nat_gateway_id=nat_gateway_az2, route_table_name='PrivateRouteTableAZ2', is_public=False)
+    
+    associateRouteTable(public_route_table, public_subnet_az1)
+    associateRouteTable(public_route_table, public_subnet_az2)
+    associateRouteTable(private_route_table_az1, private_subnet_az1)
+    associateRouteTable(private_route_table_az2, private_subnet_az2)
+
+    security_group_id = createSecurityGroup(vpc_id, 'polystudent-sg')
+
+    bucket_name = createS3Bucket('tp4testpolystudents345454')
+
+    print('*'*50 + '\n')
+    print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
+    print(f'VPC ID: {vpc_id}')
+    print(f'Internet Gateway ID: {igw_id}')
+    print(f'Public Subnet AZ1 ID: {public_subnet_az1}')
+    print(f'Public Subnet AZ2 ID: {public_subnet_az2}')
+    print(f'Private Subnet AZ1 ID: {private_subnet_az1}')
+    print(f'Private Subnet AZ2 ID: {private_subnet_az2}')
+    print(f'NAT Gateway AZ1 ID: {nat_gateway_az1}')
+    print(f'NAT Gateway AZ2 ID: {nat_gateway_az2}')
+    print(f'Public Route Table ID: {public_route_table}')
+    print(f'Private Route Table AZ1 ID: {private_route_table_az1}')
+    print(f'Private Route Table AZ2 ID: {private_route_table_az2}')
+    print(f'Security Group ID: {security_group_id}')
+    print('*'*50 + '\n')
 
 
 if __name__ == "__main__":
