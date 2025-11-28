@@ -455,6 +455,44 @@ def main():
     print('*'*14 + ' Infrastructure Start ' + '*'*14)
     
     vpc_id = createVPC('10.0.0.0/16', 'polystudent-vpc1')
+    igw_id = createInternetGateway(vpc_id, 'polystudent-igw')
+    
+    public_subnet_az1 = createSubnet(vpc_id, '10.0.1.0/24', 'us-east-1a', 'PublicSubnetAZ1', is_public=True)
+    public_subnet_az2 = createSubnet(vpc_id, '10.0.2.0/24', 'us-east-1b', 'PublicSubnetAZ2', is_public=True)
+    private_subnet_az1 = createSubnet(vpc_id, '10.0.3.0/24', 'us-east-1a', 'PrivateSubnetAZ1', is_public=False)
+    private_subnet_az2 = createSubnet(vpc_id, '10.0.4.0/24', 'us-east-1b', 'PrivateSubnetAZ2', is_public=False)
+
+    nat_gateway_az1 = createNATGateway(public_subnet_az1, 'NATGatewayAZ1')
+    nat_gateway_az2 = createNATGateway(public_subnet_az2, 'NATGatewayAZ2')
+    
+    public_route_table = createRoutingTable(vpc_id, igw_id=igw_id, route_table_name='PublicRouteTable', is_public=True)
+    private_route_table_az1 = createRoutingTable(vpc_id, nat_gateway_id=nat_gateway_az1, route_table_name='PrivateRouteTableAZ1', is_public=False)
+    private_route_table_az2 = createRoutingTable(vpc_id, nat_gateway_id=nat_gateway_az2, route_table_name='PrivateRouteTableAZ2', is_public=False)
+    
+    associateRouteTable(public_route_table, public_subnet_az1)
+    associateRouteTable(public_route_table, public_subnet_az2)
+    associateRouteTable(private_route_table_az1, private_subnet_az1)
+    associateRouteTable(private_route_table_az2, private_subnet_az2)
+
+    security_group_id = createSecurityGroup(vpc_id, 'polystudent-sg')
+
+    bucket_name = createS3Bucket('tp4testpolystudents345454')
+
+    print('*'*50 + '\n')
+    print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
+    print(f'VPC ID: {vpc_id}')
+    print(f'Internet Gateway ID: {igw_id}')
+    print(f'Public Subnet AZ1 ID: {public_subnet_az1}')
+    print(f'Public Subnet AZ2 ID: {public_subnet_az2}')
+    print(f'Private Subnet AZ1 ID: {private_subnet_az1}')
+    print(f'Private Subnet AZ2 ID: {private_subnet_az2}')
+    print(f'NAT Gateway AZ1 ID: {nat_gateway_az1}')
+    print(f'NAT Gateway AZ2 ID: {nat_gateway_az2}')
+    print(f'Public Route Table ID: {public_route_table}')
+    print(f'Private Route Table AZ1 ID: {private_route_table_az1}')
+    print(f'Private Route Table AZ2 ID: {private_route_table_az2}')
+    print(f'Security Group ID: {security_group_id}')
+    print('*'*50 + '\n')
 
 
 if __name__ == "__main__":
