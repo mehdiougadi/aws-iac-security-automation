@@ -2,6 +2,7 @@ import boto3
 import configparser
 import sys
 import os
+import time
 
 
 """
@@ -250,12 +251,80 @@ def deleteRouteTables(vpc_id):
         print(f'- Failed to delete Route Tables: {e}')
 
 
+def deleteSecurityGroups(vpc_id):
+    try:
+        print(f'- Deleting Security Groups in VPC: {vpc_id}')
+        
+        security_groups = EC2_CLIENT.describe_security_groups(
+            Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}]
+        )
+        
+        for sg in security_groups['SecurityGroups']:
+            if sg['GroupName'] != 'default':
+                sg_id = sg['GroupId']
+                print(f'- Deleting Security Group: {sg_id} ({sg["GroupName"]})')
+                try:
+                    EC2_CLIENT.delete_security_group(GroupId=sg_id)
+                except Exception as e:
+                    print(f'- Failed to delete {sg_id}: {e}')
+        
+        print('- Security Groups deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete Security Groups: {e}')
+
+
+def cleanupAllVPCs():
+    try:
+        print('- Fetching all VPCs in the region')
+        
+        vpcs = EC2_CLIENT.describe_vpcs()
+        
+        non_default_vpcs = [vpc for vpc in vpcs['Vpcs'] if not vpc['IsDefault']]
+        
+        if not non_default_vpcs:
+            print('- No non-default VPCs found to delete')
+            return
+        
+        print(f'- Found {len(non_default_vpcs)} non-default VPC(s) to clean up')
+        
+        for vpc in non_default_vpcs:
+            vpc_id = vpc['VpcId']
+            vpc_name = 'N/A'
+            if 'Tags' in vpc:
+                for tag in vpc['Tags']:
+                    if tag['Key'] == 'Name':
+                        vpc_name = tag['Value']
+                        break
+            
+            print(f'\n{"="*50}')
+            print(f'Cleaning up VPC: {vpc_id} ({vpc_name})')
+            print(f'{"="*50}')
+            
+            deleteNATGateways(vpc_id)
+            releaseElasticIPs()
+            deleteSecurityGroups(vpc_id)
+            deleteSubnets(vpc_id)
+            deleteRouteTables(vpc_id)
+            deleteInternetGateways(vpc_id)
+            deleteVPC(vpc_id)
+        
+        print(f'\n{"="*50}')
+        print('All VPCs cleaned up successfully')
+        print(f'{"="*50}')
+        
+    except Exception as e:
+        print(f'- Failed to cleanup VPCs: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
     setBoto3Clients()
     print('*'*50 + '\n')
 
+    cleanupAllVPCs()
 
 if __name__ == "__main__":
     main()
