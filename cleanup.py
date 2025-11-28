@@ -200,6 +200,56 @@ def deleteNATGateways(vpc_id):
         print(f'- Failed to delete NAT Gateways: {e}')
 
 
+def releaseElasticIPs():
+    try:
+        print('- Releasing unattached Elastic IPs')
+        
+        addresses = EC2_CLIENT.describe_addresses()
+        
+        for address in addresses['Addresses']:
+            if 'AssociationId' not in address:
+                allocation_id = address['AllocationId']
+                print(f'- Releasing Elastic IP: {address["PublicIp"]}')
+                try:
+                    EC2_CLIENT.release_address(AllocationId=allocation_id)
+                except Exception as e:
+                    print(f'- Failed to release {allocation_id}: {e}')
+        
+        print('- Elastic IPs released successfully')
+        
+    except Exception as e:
+        print(f'- Failed to release Elastic IPs: {e}')
+
+
+def deleteRouteTables(vpc_id):
+    try:
+        print(f'- Deleting Route Tables in VPC: {vpc_id}')
+        
+        route_tables = EC2_CLIENT.describe_route_tables(
+            Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}]
+        )
+        
+        for rt in route_tables['RouteTables']:
+            is_main = False
+            for assoc in rt['Associations']:
+                if assoc.get('Main', False):
+                    is_main = True
+                    break
+            
+            if not is_main:
+                rt_id = rt['RouteTableId']
+                print(f'- Deleting Route Table: {rt_id}')
+                try:
+                    EC2_CLIENT.delete_route_table(RouteTableId=rt_id)
+                except Exception as e:
+                    print(f'- Failed to delete {rt_id}: {e}')
+        
+        print('- Route Tables deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete Route Tables: {e}')
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
