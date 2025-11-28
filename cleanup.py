@@ -318,6 +318,84 @@ def cleanupAllVPCs():
         sys.exit(1)
 
 
+def deleteAllS3Buckets():
+    try:
+        print('\n' + '='*50)
+        print('Cleaning up S3 Buckets')
+        print('='*50)
+        
+        buckets = S3_CLIENT.list_buckets()
+        
+        if not buckets['Buckets']:
+            print('- No S3 buckets found to delete')
+            return
+        
+        print(f'- Found {len(buckets["Buckets"])} bucket(s) to clean up')
+        
+        for bucket in buckets['Buckets']:
+            bucket_name = bucket['Name']
+            print(f'\n- Processing bucket: {bucket_name}')
+            
+            try:
+                print(f'  - Deleting all objects and versions in {bucket_name}')
+                
+                try:
+                    versioning = S3_CLIENT.get_bucket_versioning(Bucket=bucket_name)
+                    is_versioned = versioning.get('Status') == 'Enabled'
+                except:
+                    is_versioned = False
+                
+                if is_versioned:
+                    paginator = S3_CLIENT.get_paginator('list_object_versions')
+                    for page in paginator.paginate(Bucket=bucket_name):
+                        objects_to_delete = []
+                        
+                        if 'Versions' in page:
+                            for version in page['Versions']:
+                                objects_to_delete.append({
+                                    'Key': version['Key'],
+                                    'VersionId': version['VersionId']
+                                })
+                        
+                        if 'DeleteMarkers' in page:
+                            for marker in page['DeleteMarkers']:
+                                objects_to_delete.append({
+                                    'Key': marker['Key'],
+                                    'VersionId': marker['VersionId']
+                                })
+                        
+                        if objects_to_delete:
+                            S3_CLIENT.delete_objects(
+                                Bucket=bucket_name,
+                                Delete={'Objects': objects_to_delete}
+                            )
+                            print(f'  - Deleted {len(objects_to_delete)} object versions')
+                else:
+                    paginator = S3_CLIENT.get_paginator('list_objects_v2')
+                    for page in paginator.paginate(Bucket=bucket_name):
+                        if 'Contents' in page:
+                            objects_to_delete = [{'Key': obj['Key']} for obj in page['Contents']]
+                            S3_CLIENT.delete_objects(
+                                Bucket=bucket_name,
+                                Delete={'Objects': objects_to_delete}
+                            )
+                            print(f'  - Deleted {len(objects_to_delete)} objects')
+                
+                print(f'  - Deleting bucket: {bucket_name}')
+                S3_CLIENT.delete_bucket(Bucket=bucket_name)
+                print(f'Bucket {bucket_name} deleted successfully')
+                
+            except Exception as e:
+                print(f'Failed to delete bucket {bucket_name}: {e}')
+        
+        print('\n' + '='*50)
+        print('S3 buckets cleanup completed')
+        print('='*50)
+        
+    except Exception as e:
+        print(f'- Failed to cleanup S3 buckets: {e}')
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
@@ -325,6 +403,7 @@ def main():
     print('*'*50 + '\n')
 
     cleanupAllVPCs()
+    deleteAllS3Buckets()
 
 if __name__ == "__main__":
     main()
