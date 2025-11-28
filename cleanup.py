@@ -100,6 +100,50 @@ def setBoto3Clients():
         sys.exit(1)
 
 
+"""
+    Cleanup functions
+"""
+def deleteVPC(vpc_id):
+    try:
+        print(f'- Deleting VPC: {vpc_id}')
+        
+        EC2_CLIENT.delete_vpc(VpcId=vpc_id)
+        
+        print(f'- VPC {vpc_id} deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete VPC {vpc_id}: {e}')
+
+
+def deleteSubnets(vpc_id):
+    try:
+        print(f'- Deleting Subnets in VPC: {vpc_id}')
+        
+        subnets = EC2_CLIENT.describe_subnets(
+            Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}]
+        )
+        
+        for subnet in subnets['Subnets']:
+            subnet_id = subnet['SubnetId']
+            subnet_name = 'N/A'
+            if 'Tags' in subnet:
+                for tag in subnet['Tags']:
+                    if tag['Key'] == 'Name':
+                        subnet_name = tag['Value']
+                        break
+            
+            print(f'- Deleting Subnet: {subnet_id} ({subnet_name})')
+            try:
+                EC2_CLIENT.delete_subnet(SubnetId=subnet_id)
+            except Exception as e:
+                print(f'- Failed to delete {subnet_id}: {e}')
+        
+        print('- Subnets deleted successfully')
+        
+    except Exception as e:
+        print(f'- Failed to delete Subnets: {e}')
+        
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
