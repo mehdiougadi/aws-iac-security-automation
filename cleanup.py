@@ -435,5 +435,6 @@ def main():
     cleanupAllVPCs()
     deleteAllS3Buckets()
 
+
 if __name__ == "__main__":
     main()
