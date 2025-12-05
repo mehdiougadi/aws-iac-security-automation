@@ -75,7 +75,7 @@ def setBoto3Clients():
     try:
         print('- Starting setting up the boto3 clients')
 
-        global EC2_CLIENT, S3_CLIENT
+        global EC2_CLIENT, S3_CLIENT, CW_CLIENT, SSM_CLIENT
 
         EC2_CLIENT = boto3.client(
             'ec2',
@@ -87,6 +87,22 @@ def setBoto3Clients():
 
         S3_CLIENT = boto3.client(
             's3',
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
+            region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
+        )
+
+        CW_CLIENT = boto3.client(
+            'cloudwatch',
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
+            region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
+        )
+
+        SSM_CLIENT = boto3.client(
+            'ssm',
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
             aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
@@ -482,6 +498,100 @@ def createVPCFlowLog(vpc_id, bucket_name, flow_log_name='polystudent-flowlog'):
         sys.exit(1)
 
 
+def createEC2Instance(subnet_id, security_group_id, instance_name, iam_role_name='LabRole'):
+    try:
+        print(f'- Creating EC2 Instance: {instance_name}')
+        
+        # Get latest Amazon Linux 2 AMI
+        response = SSM_CLIENT.get_parameter(
+            Name='/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+        )
+        ami_id = response['Parameter']['Value']
+        print(f'- Using AMI: {ami_id}')
+
+        # Try to find a key pair
+        key_name = None
+        try:
+            key_pairs = EC2_CLIENT.describe_key_pairs()
+            if key_pairs['KeyPairs']:
+                # Prefer 'vockey' if it exists
+                for kp in key_pairs['KeyPairs']:
+                    if kp['KeyName'] == 'vockey':
+                        key_name = 'vockey'
+                        break
+                if not key_name:
+                    key_name = key_pairs['KeyPairs'][0]['KeyName']
+                print(f'- Using Key Pair: {key_name}')
+        except Exception:
+            print('- No Key Pair found or failed to list, proceeding without one')
+
+        run_instances_args = {
+            'ImageId': ami_id,
+            'InstanceType': 't2.micro',
+            'MinCount': 1,
+            'MaxCount': 1,
+            'SubnetId': subnet_id,
+            'SecurityGroupIds': [security_group_id],
+            'IamInstanceProfile': {'Name': iam_role_name},
+            'TagSpecifications': [
+                {
+                    'ResourceType': 'instance',
+                    'Tags': [{'Key': 'Name', 'Value': instance_name}]
+                }
+            ]
+        }
+
+        if key_name:
+            run_instances_args['KeyName'] = key_name
+
+        instance_response = EC2_CLIENT.run_instances(**run_instances_args)
+        
+        instance_id = instance_response['Instances'][0]['InstanceId']
+        print(f'- Instance created: {instance_id}')
+        
+        print(f'- Waiting for instance {instance_id} to be running...')
+        waiter = EC2_CLIENT.get_waiter('instance_running')
+        waiter.wait(InstanceIds=[instance_id])
+        
+        print(f'- Instance {instance_name} is running')
+        
+        return instance_id
+
+    except Exception as e:
+        print(f'- Failed to create instance: {e}')
+        sys.exit(1)
+
+
+def createCloudWatchAlarm(instance_id, instance_name):
+    try:
+        print(f'- Creating CloudWatch Alarm for {instance_name}')
+        
+        CW_CLIENT.put_metric_alarm(
+            AlarmName=f'High-Incoming-Traffic-{instance_name}',
+            AlarmDescription='Alarm when incoming packets exceed 1000 pkts/sec',
+            ActionsEnabled=False,
+            MetricName='NetworkPacketsIn',
+            Namespace='AWS/EC2',
+            Statistic='Average',
+            Dimensions=[
+                {
+                    'Name': 'InstanceId',
+                    'Value': instance_id
+                },
+            ],
+            Period=60,
+            EvaluationPeriods=1,
+            Threshold=1000.0,
+            ComparisonOperator='GreaterThanThreshold'
+        )
+        
+        print(f'- Alarm created successfully for {instance_id}')
+        
+    except Exception as e:
+        print(f'- Failed to create CloudWatch alarm: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
@@ -516,6 +626,10 @@ def main():
 
     flow_log_id = createVPCFlowLog(vpc_id, bucket_name, 'polystudent-flowlog')
 
+    instance_name = 'WebInstanceAZ1'
+    instance_id = createEC2Instance(public_subnet_az1, security_group_id, instance_name)
+    createCloudWatchAlarm(instance_id, instance_name)
+
     print('*'*50 + '\n')
     print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
     print(f'VPC ID: {vpc_id}')
@@ -540,6 +654,10 @@ def main():
 
     print('-'*22 + ' 3.1  ' + '-'*22)
     print(f'VPC Flow Log ID: {flow_log_id}')
+    
+    print('-'*22 + ' 3.2  ' + '-'*22)
+    print(f'Instance ID: {instance_id}')
+    print(f'CloudWatch Alarm created for {instance_id}')
     print('-'*50)
 
 
