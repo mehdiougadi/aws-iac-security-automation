@@ -549,7 +549,7 @@ def createEC2Instance(subnet_id, security_group_id, instance_name, iam_role_name
             'MaxCount': 1,
             'SubnetId': subnet_id,
             'SecurityGroupIds': [security_group_id],
-            'IamInstanceProfile': {'Name': iam_role_name},
+            'IamInstanceProfile': {'Name': 'LabInstanceProfile'},
             'TagSpecifications': [
                 {
                     'ResourceType': 'instance',
