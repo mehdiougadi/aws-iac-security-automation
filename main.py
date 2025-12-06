@@ -2,6 +2,7 @@ import boto3
 import configparser
 import sys
 import os
+import json
 
 
 """
@@ -75,7 +76,7 @@ def setBoto3Clients():
     try:
         print('- Starting setting up the boto3 clients')
 
-        global EC2_CLIENT, S3_CLIENT, CW_CLIENT, SSM_CLIENT
+        global EC2_CLIENT, S3_CLIENT, CW_CLIENT, SSM_CLIENT, IAM_CLIENT, CLOUDTRAIL_CLIENT
 
         EC2_CLIENT = boto3.client(
             'ec2',
@@ -103,6 +104,22 @@ def setBoto3Clients():
 
         SSM_CLIENT = boto3.client(
             'ssm',
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
+            region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
+        )
+
+        IAM_CLIENT = boto3.client(
+            'iam',
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
+            region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
+        )
+
+        CLOUDTRAIL_CLIENT = boto3.client(
+            'cloudtrail',
             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
             aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
@@ -592,6 +609,112 @@ def createCloudWatchAlarm(instance_id, instance_name):
         sys.exit(1)
 
 
+def getLabRoleArn():
+    try:
+        role = IAM_CLIENT.get_role(RoleName='LabRole')
+        return role['Role']['Arn']
+    except Exception as e:
+        print(f'- Failed to get LabRole: {e}')
+        sys.exit(1)
+
+
+def configureS3Replication(source_bucket, dest_bucket, role_arn):
+    try:
+        print(f'- Configuring replication from {source_bucket} to {dest_bucket}')
+        
+        S3_CLIENT.put_bucket_replication(
+            Bucket=source_bucket,
+            ReplicationConfiguration={
+                'Role': role_arn,
+                'Rules': [
+                    {
+                        'ID': 'ReplicationRule',
+                        'Priority': 1,
+                        'Status': 'Enabled',
+                        'Filter': {},
+                        'Destination': {
+                            'Bucket': f'arn:aws:s3:::{dest_bucket}'
+                        },
+                        'DeleteMarkerReplication': {'Status': 'Disabled'}
+                    }
+                ]
+            }
+        )
+        print('- Replication configured successfully')
+        
+    except Exception as e:
+        print(f'- Failed to configure replication: {e}')
+        sys.exit(1)
+
+
+def createCloudTrail(trail_name, bucket_to_watch, log_bucket):
+    try:
+        print(f'- Creating CloudTrail: {trail_name}')
+        
+        # Policy for Log Bucket
+        policy_doc = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "AWSCloudTrailAclCheck",
+                    "Effect": "Allow",
+                    "Principal": {"Service": "cloudtrail.amazonaws.com"},
+                    "Action": "s3:GetBucketAcl",
+                    "Resource": f"arn:aws:s3:::{log_bucket}"
+                },
+                {
+                    "Sid": "AWSCloudTrailWrite",
+                    "Effect": "Allow",
+                    "Principal": {"Service": "cloudtrail.amazonaws.com"},
+                    "Action": "s3:PutObject",
+                    "Resource": f"arn:aws:s3:::{log_bucket}/AWSLogs/*",
+                    "Condition": {"StringEquals": {"s3:x-amz-acl": "bucket-owner-full-control"}}
+                }
+            ]
+        }
+        
+        S3_CLIENT.put_bucket_policy(
+            Bucket=log_bucket,
+            Policy=json.dumps(policy_doc)
+        )
+        
+        try:
+            CLOUDTRAIL_CLIENT.create_trail(
+                Name=trail_name,
+                S3BucketName=log_bucket,
+                IsMultiRegionTrail=False,
+                EnableLogFileValidation=True
+            )
+        except Exception as e:
+            if 'TrailAlreadyExistsException' in str(e):
+                print(f'- Trail {trail_name} already exists')
+            else:
+                raise e
+        
+        CLOUDTRAIL_CLIENT.put_event_selectors(
+            TrailName=trail_name,
+            EventSelectors=[
+                {
+                    'ReadWriteType': 'All',
+                    'IncludeManagementEvents': True,
+                    'DataResources': [
+                        {
+                            'Type': 'AWS::S3::Object',
+                            'Values': [f'arn:aws:s3:::{bucket_to_watch}/']
+                        }
+                    ]
+                }
+            ]
+        )
+        
+        CLOUDTRAIL_CLIENT.start_logging(Name=trail_name)
+        print(f'- CloudTrail {trail_name} created and logging started')
+        
+    except Exception as e:
+        print(f'- Failed to create CloudTrail: {e}')
+        sys.exit(1)
+
+
 def main():
     print('*'*18 + ' Initial Setup ' + '*'*17)
     validateAWSCredentials()
@@ -623,6 +746,14 @@ def main():
     security_group_id = createSecurityGroup(vpc_id, 'polystudent-sg')
 
     bucket_name = createS3Bucket('tp4polystudents2051559')
+    backup_bucket_name = createS3Bucket('tp4polystudents2051559-back')
+    
+    role_arn = getLabRoleArn()
+    print(f'- Using existing LabRole for replication: {role_arn}')
+    configureS3Replication(bucket_name, backup_bucket_name, role_arn)
+    
+    log_bucket_name = createS3Bucket('tp4polystudents2051559-logs')
+    createCloudTrail('polystudent-trail', bucket_name, log_bucket_name)
 
     flow_log_id = createVPCFlowLog(vpc_id, bucket_name, 'polystudent-flowlog')
 
@@ -660,6 +791,12 @@ def main():
     print(f'CloudWatch Alarm created for {instance_id}')
     print('-'*50)
 
+    print('-'*22 + ' 3.3  ' + '-'*22)
+    print(f'Backup Bucket Name: {backup_bucket_name}')
+    print(f'Log Bucket Name: {log_bucket_name}')
+    print(f'Replication Role: {role_arn}')
+    print(f'CloudTrail enabled for {bucket_name}')
+    print('-'*50)
 
 if __name__ == "__main__":
     main()
