@@ -1,0 +1,911 @@
+---
+Metadata:
+  AWSToolsMetrics:
+    IaC_Generator: "arn:aws:cloudformation:us-east-1:905418077555:generatedTemplate/e1a87cbd-5aeb-4f9a-821d-b94faaf543e6"
+Parameters:
+  KeyName:
+    Default: "vockey"
+    Type: "String"
+    Description: "Name of an existing EC2 KeyPair to enable SSH access"
+Resources:
+  EC2FlowLog:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::FlowLog"
+    DeletionPolicy: "Retain"
+    Properties:
+      LogFormat: "${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport}\
+        \ ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}"
+      ResourceId:
+        Ref: "EC2VPCXO"
+      MaxAggregationInterval: 600
+      DestinationOptions:
+        FileFormat: "plain-text"
+        PerHourPartition: false
+        HiveCompatiblePartitions: false
+      ResourceType: "VPC"
+      LogDestination:
+        Fn::GetAtt:
+        - "S3BucketTp4polystudents2051559"
+        - "Arn"
+      LogDestinationType: "s3"
+      Tags:
+      - Value: "polystudent-flowlog"
+        Key: "Name"
+      TrafficType: "REJECT"
+  EC2SubnetWS:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPCXO"
+      AvailabilityZoneId: "use1-az4"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "10.0.3.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "PrivateSubnetAZ1"
+        Key: "Name"
+  EC2EIP1002711048:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::EIP"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicIpv4Pool: "amazon"
+      Domain: "vpc"
+      Tags: []
+      NetworkBorderGroup: "us-east-1"
+  EC2RouteTableRD:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::RouteTable"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPCXO"
+      Tags:
+      - Value: "PublicRouteTable"
+        Key: "Name"
+  EC2RouteTableLs:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::RouteTable"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPC"
+  EC2VPCXO:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::VPC"
+    DeletionPolicy: "Retain"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      EnableDnsSupport: true
+      InstanceTenancy: "default"
+      EnableDnsHostnames: true
+      Tags:
+      - Value: "polystudent-vpc1"
+        Key: "Name"
+  EC2SubnetNetworkAclAssociation:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAclGo"
+      SubnetId:
+        Ref: "EC2Subnet"
+  EC2VPCDHCPOptionsAssociationGu:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::VPCDHCPOptionsAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPCXO"
+      DhcpOptionsId:
+        Ref: "EC2DHCPOptions"
+  EC2NatGateway:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NatGateway"
+    DeletionPolicy: "Retain"
+    Properties:
+      PrivateIpAddress: "10.0.1.46"
+      SubnetId:
+        Ref: "EC2Subnet"
+      ConnectivityType: "public"
+      VpcId: "vpc-066063f3c9cca9969"
+      Tags:
+      - Value: "NATGatewayAZ1"
+        Key: "Name"
+      AllocationId:
+        Fn::GetAtt:
+        - "EC2EIP100248260"
+        - "AllocationId"
+  EC2NatGatewaySx:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NatGateway"
+    DeletionPolicy: "Retain"
+    Properties:
+      PrivateIpAddress: "10.0.2.49"
+      SubnetId:
+        Ref: "EC2SubnetWp"
+      ConnectivityType: "public"
+      VpcId: "vpc-066063f3c9cca9969"
+      Tags:
+      - Value: "NATGatewayAZ2"
+        Key: "Name"
+      AllocationId:
+        Fn::GetAtt:
+        - "EC2EIP1002711048"
+        - "AllocationId"
+  EC2SubnetGP:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: false
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPCXO"
+      AvailabilityZoneId: "use1-az6"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "10.0.4.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "PrivateSubnetAZ2"
+        Key: "Name"
+  EC2SubnetNetworkAclAssociationGT:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetFf"
+  EC2SubnetFf:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az3"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.48.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2SubnetSS:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az4"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.16.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2RouteTableW2:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::RouteTable"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPCXO"
+      Tags:
+      - Value: "PrivateRouteTableAZ1"
+        Key: "Name"
+  S3BucketTp4polystudents2051559logs:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      AbacStatus: "Disabled"
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "tp4polystudents2051559-logs"
+      VersioningConfiguration:
+        Status: "Enabled"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerPreferred"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: false
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  EC2EIPAssociationCT:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::EIPAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      PrivateIpAddress:
+        Fn::GetAtt:
+        - "EC2NetworkInterfaceXU"
+        - "PrimaryPrivateIpAddress"
+      NetworkInterfaceId:
+        Ref: "EC2NetworkInterfaceXU"
+      EIP:
+        Fn::GetAtt:
+        - "EC2EIP100248260"
+        - "PublicIp"
+      AllocationId:
+        Fn::GetAtt:
+        - "EC2EIP100248260"
+        - "AllocationId"
+  EC2EIPAssociation:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::EIPAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      PrivateIpAddress:
+        Fn::GetAtt:
+        - "EC2NetworkInterface"
+        - "PrimaryPrivateIpAddress"
+      NetworkInterfaceId:
+        Ref: "EC2NetworkInterface"
+      EIP:
+        Fn::GetAtt:
+        - "EC2EIP1002711048"
+        - "PublicIp"
+      AllocationId:
+        Fn::GetAtt:
+        - "EC2EIP1002711048"
+        - "AllocationId"
+  EC2Instance:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Instance"
+    DeletionPolicy: "Retain"
+    Properties:
+      Tenancy: "default"
+      PrivateIpAddress: "10.0.1.87"
+      InstanceInitiatedShutdownBehavior: "stop"
+      BlockDeviceMappings:
+      - Ebs:
+          SnapshotId: "snap-0ea2b465cc56e487c"
+          VolumeType: "gp2"
+          Iops: 100
+          VolumeSize: 8
+          Encrypted: false
+          DeleteOnTermination: true
+        DeviceName: "/dev/xvda"
+      PrivateDnsNameOptions:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      SubnetId:
+        Ref: "EC2Subnet"
+      SecurityGroupIds:
+      - "sg-02895db650d28289d"
+      EbsOptimized: false
+      DisableApiTermination: false
+      SourceDestCheck: true
+      PlacementGroupName: ""
+      VpcId: "vpc-066063f3c9cca9969"
+      State:
+        Code: "16"
+        Name: "running"
+      NetworkInterfaces:
+      - Ipv6Addresses: []
+        SubnetId:
+          Ref: "EC2Subnet"
+        SecondaryPrivateIpAddressCount: 0
+        NetworkInterfaceId:
+          Ref: "EC2NetworkInterfaceAf"
+        DeviceIndex: "0"
+      ImageId: "ami-0156001f0548e90b1"
+      InstanceType: "t2.micro"
+      Monitoring: false
+      Tags:
+      - Value: "WebInstanceAZ1"
+        Key: "Name"
+      CreditSpecification:
+        CPUCredits: "standard"
+  EC2SubnetNetworkAclAssociationTs:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAclGo"
+      SubnetId:
+        Ref: "EC2SubnetWp"
+  EC2DHCPOptions:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::DHCPOptions"
+    DeletionPolicy: "Retain"
+    Properties:
+      DomainName: "ec2.internal"
+      DomainNameServers:
+      - "AmazonProvidedDNS"
+      Tags: []
+  EC2Route:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Route"
+    DeletionPolicy: "Retain"
+    Properties:
+      NatGatewayId:
+        Ref: "EC2NatGatewaySx"
+      RouteTableId:
+        Ref: "EC2RouteTable"
+      DestinationCidrBlock: "0.0.0.0/0"
+  S3BucketTp4polystudents2051559:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      AbacStatus: "Disabled"
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "tp4polystudents2051559"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerPreferred"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: false
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+      VersioningConfiguration:
+        Status: "Enabled"
+      ReplicationConfiguration:
+        Role: "arn:aws:iam::905418077555:role/LabRole"
+        Rules:
+        - Status: "Enabled"
+          Destination:
+            Bucket:
+              Fn::GetAtt:
+              - "S3BucketTp4polystudents2051559back"
+              - "Arn"
+          Id: "ReplicationRule"
+          DeleteMarkerReplication:
+            Status: "Disabled"
+          Filter: {}
+          Priority: 1
+  CloudWatchAlarmHighIncomingTrafficWebInstanceAZ1:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "GreaterThanThreshold"
+      Dimensions:
+      - Value: "i-029cf540f4e602dbf"
+        Name: "InstanceId"
+      Period: 60
+      EvaluationPeriods: 1
+      Namespace: "AWS/EC2"
+      OKActions: []
+      AlarmActions: []
+      MetricName: "NetworkPacketsIn"
+      ActionsEnabled: false
+      AlarmDescription: "Alarm when incoming packets exceed 1000 pkts/sec"
+      AlarmName: "High-Incoming-Traffic-WebInstanceAZ1"
+      Statistic: "Average"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 1000
+  EC2SubnetNetworkAclAssociationLh:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAclGo"
+      SubnetId:
+        Ref: "EC2SubnetWS"
+  AthenaWorkGroupPrimary:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Athena::WorkGroup"
+    DeletionPolicy: "Retain"
+    Properties:
+      WorkGroupConfiguration:
+        RequesterPaysEnabled: false
+        EnforceWorkGroupConfiguration: false
+        EngineVersion:
+          SelectedEngineVersion: "AUTO"
+        PublishCloudWatchMetricsEnabled: true
+        ResultConfiguration: {}
+      State: "ENABLED"
+      Tags: []
+      Name: "primary"
+  EC2SubnetNetworkAclAssociationMA:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetSS"
+  EC2VPCDHCPOptionsAssociation:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::VPCDHCPOptionsAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPC"
+      DhcpOptionsId:
+        Ref: "EC2DHCPOptions"
+  EC2NetworkInterface:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Retain"
+    Properties:
+      Description: "Interface for NAT Gateway nat-0e96788ee698681a7"
+      PrivateIpAddress: "10.0.2.49"
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet: []
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2SubnetWp"
+      SourceDestCheck: false
+      InterfaceType: "null"
+      Tags: []
+      PublicIpDnsNameOptions:
+        DnsHostnameType: "public-ipv4-dns-name"
+        PublicIpv4DnsName: "ec2-100-27-110-48.compute-1.amazonaws.com"
+  EC2InternetGateway:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::InternetGateway"
+    DeletionPolicy: "Retain"
+    Properties:
+      Tags: []
+  EC2NetworkAcl:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NetworkAcl"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPC"
+      Tags: []
+  EC2NetworkInterfaceXU:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Retain"
+    Properties:
+      Description: "Interface for NAT Gateway nat-0b5a6cc17c29bdbf5"
+      PrivateIpAddress: "10.0.1.46"
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet: []
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet"
+      SourceDestCheck: false
+      InterfaceType: "null"
+      Tags: []
+      PublicIpDnsNameOptions:
+        DnsHostnameType: "public-ipv4-dns-name"
+        PublicIpv4DnsName: "ec2-100-24-82-60.compute-1.amazonaws.com"
+  EC2SubnetNetworkAclAssociationUA:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetA9"
+  EC2NetworkAclGo:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NetworkAcl"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPCXO"
+      Tags: []
+  EC2NetworkInterfaceAf:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Retain"
+    Properties:
+      Description: ""
+      PrivateIpAddress: "10.0.1.87"
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet:
+      - "sg-02895db650d28289d"
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet"
+      SourceDestCheck: true
+      InterfaceType: "interface"
+      Tags: []
+      PublicIpDnsNameOptions:
+        DnsHostnameType: "public-ipv4-dns-name"
+        PublicIpv4DnsName: "ec2-54-242-166-119.compute-1.amazonaws.com"
+  EC2SubnetA9:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az1"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.0.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2SubnetNetworkAclAssociationIr:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetGa"
+  EC2InternetGatewayVl:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::InternetGateway"
+    DeletionPolicy: "Retain"
+    Properties:
+      Tags:
+      - Value: "polystudent-igw"
+        Key: "Name"
+  EC2Subnet:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPCXO"
+      AvailabilityZoneId: "use1-az4"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "10.0.1.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "PublicSubnetAZ1"
+        Key: "Name"
+  EC2SecurityGroup:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SecurityGroup"
+    DeletionPolicy: "Retain"
+    Properties:
+      GroupDescription: "Security group for polystudent infrastructure"
+      GroupName: "polystudent-sg"
+      VpcId:
+        Ref: "EC2VPCXO"
+      SecurityGroupIngress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "MSSQL"
+        FromPort: 1433
+        ToPort: 1433
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "HTTP"
+        FromPort: 80
+        ToPort: 80
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "PostgreSQL"
+        FromPort: 5432
+        ToPort: 5432
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "SSH"
+        FromPort: 22
+        ToPort: 22
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "OSSEC"
+        FromPort: 1514
+        ToPort: 1514
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "udp"
+        Description: "DNS UDP"
+        FromPort: 53
+        ToPort: 53
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "DNS TCP"
+        FromPort: 53
+        ToPort: 53
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "MySQL"
+        FromPort: 3306
+        ToPort: 3306
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "RDP"
+        FromPort: 3389
+        ToPort: 3389
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "HTTPS"
+        FromPort: 443
+        ToPort: 443
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "ElasticSearch"
+        FromPort: 9200
+        ToPort: 9300
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+        FromPort: -1
+        ToPort: -1
+      Tags:
+      - Value: "polystudent-sg"
+        Key: "Name"
+  EC2SubnetUG:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az6"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.32.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2VolumeAttachment:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::VolumeAttachment"
+    DeletionPolicy: "Retain"
+    Properties:
+      InstanceId: "i-029cf540f4e602dbf"
+      VolumeId: "vol-08ae772d0ca5eb776"
+      Device: "/dev/xvda"
+  EC2EIP100248260:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::EIP"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicIpv4Pool: "amazon"
+      Domain: "vpc"
+      Tags: []
+      NetworkBorderGroup: "us-east-1"
+  EC2SubnetNetworkAclAssociationB4:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetBw"
+  EC2RouteGk:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Route"
+    DeletionPolicy: "Retain"
+    Properties:
+      RouteTableId:
+        Ref: "EC2RouteTableRD"
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId:
+        Ref: "EC2InternetGatewayVl"
+      VpcEndpointId: "igw-0c9d18ec325898937"
+  EC2SubnetGa:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az5"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.64.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2Volume:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Volume"
+    DeletionPolicy: "Retain"
+    Properties:
+      MultiAttachEnabled: false
+      SnapshotId: "snap-0ea2b465cc56e487c"
+      VolumeType: "gp2"
+      Encrypted: false
+      Size: 8
+      AutoEnableIO: true
+      AvailabilityZoneId: "use1-az4"
+      AvailabilityZone: "us-east-1a"
+      Iops: 100
+      Tags: []
+  EC2SubnetWp:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPCXO"
+      AvailabilityZoneId: "use1-az6"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "10.0.2.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "PublicSubnetAZ2"
+        Key: "Name"
+  S3BucketTp4polystudents2051559back:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      AbacStatus: "Disabled"
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "tp4polystudents2051559-back"
+      VersioningConfiguration:
+        Status: "Enabled"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerPreferred"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: false
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  EC2SubnetBw:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Retain"
+    Properties:
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      VpcId:
+        Ref: "EC2VPC"
+      AvailabilityZoneId: "use1-az2"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.31.80.0/20"
+      Ipv6Native: false
+      Tags: []
+  EC2SubnetNetworkAclAssociationNe:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAcl"
+      SubnetId:
+        Ref: "EC2SubnetUG"
+  EC2VPC:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::VPC"
+    DeletionPolicy: "Retain"
+    Properties:
+      CidrBlock: "172.31.0.0/16"
+      EnableDnsSupport: true
+      InstanceTenancy: "default"
+      EnableDnsHostnames: true
+      Tags: []
+  EC2SubnetNetworkAclAssociationGA:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    DeletionPolicy: "Retain"
+    Properties:
+      NetworkAclId:
+        Ref: "EC2NetworkAclGo"
+      SubnetId:
+        Ref: "EC2SubnetGP"
+  EC2KeyPairVockey:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::KeyPair"
+    DeletionPolicy: "Retain"
+    Properties:
+      KeyName: "vockey"
+      KeyType: "rsa"
+      PublicKeyMaterial: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8McqaI/1sAFYiDSdMhf2n3mKP26rELeaoktKU/fbDbScFMox4KH6KqTegRSABD8KFvuvwxFL1cnsuJVEJd9yFjpI7XYWqaGqWz7Z7VJJNlawaOtk+IDXPIuzW/+XR/kP4UaAI98MEb9CeCZtULC99Km5e4NSzAdtMiHNbcxwJevoIYi0MGeywxvYqQE/fR++PU80pTYfBG4HvZotZkou1qkEFEzFpzrcUFesJUaPJ7/UxMwJggubqRDVzjjuRycqcdjyhtUNrBp5/PJvKMqFJ508x6Q4skGREz+xgC6iYcLjQ+ihqVWNBWxQl0W+Cey87AznxPF90rL7tk0czGlN9\
+        \ vockey\n"
+      Tags: []
+  EC2RoutePE:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Route"
+    DeletionPolicy: "Retain"
+    Properties:
+      NatGatewayId:
+        Ref: "EC2NatGateway"
+      RouteTableId:
+        Ref: "EC2RouteTableW2"
+      DestinationCidrBlock: "0.0.0.0/0"
+  EC2RouteTable:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::RouteTable"
+    DeletionPolicy: "Retain"
+    Properties:
+      VpcId:
+        Ref: "EC2VPCXO"
+      Tags:
+      - Value: "PrivateRouteTableAZ2"
+        Key: "Name"
+  CloudTrailTrailPolystudenttrail:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudTrail::Trail"
+    DeletionPolicy: "Retain"
+    Properties:
+      IncludeGlobalServiceEvents: true
+      EventSelectors:
+      - IncludeManagementEvents: true
+        DataResources:
+        - Values:
+          - "arn:aws:s3:::tp4polystudents2051559/"
+          Type: "AWS::S3::Object"
+        ReadWriteType: "All"
+        ExcludeManagementEventSources: []
+      AggregationConfigurations: []
+      IsMultiRegionTrail: false
+      AdvancedEventSelectors: []
+      TrailName: "polystudent-trail"
+      S3BucketName:
+        Ref: "S3BucketTp4polystudents2051559logs"
+      EnableLogFileValidation: true
+      Tags: []
+      IsOrganizationTrail: false
+      InsightSelectors: []
+      IsLogging: true
+  EC2RouteFq:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::EC2::Route"
+    DeletionPolicy: "Retain"
+    Properties:
+      RouteTableId:
+        Ref: "EC2RouteTableLs"
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId:
+        Ref: "EC2InternetGateway"
+      VpcEndpointId: "igw-0c7a65747f3cf0cc7"
