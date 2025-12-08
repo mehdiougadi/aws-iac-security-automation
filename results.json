@@ -1,0 +1,3649 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2025-12-08T15:10:41.400559421-05:00",
+  "ArtifactName": "lab4-template-template-1765223827835.yaml",
+  "ArtifactType": "filesystem",
+  "Metadata": {
+    "ImageConfig": {
+      "architecture": "",
+      "created": "0001-01-01T00:00:00Z",
+      "os": "",
+      "rootfs": {
+        "type": "",
+        "diff_ids": null
+      },
+      "config": {}
+    }
+  },
+  "Results": [
+    {
+      "Target": "lab4-template-template-1765223827835.yaml",
+      "Class": "config",
+      "Type": "cloudformation",
+      "MisconfSummary": {
+        "Successes": 46,
+        "Failures": 36,
+        "Exceptions": 0
+      },
+      "Misconfigurations": [
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0006",
+          "AVDID": "AVD-AWS-0006",
+          "Title": "Athena databases and workgroup configurations are created unencrypted at rest by default, they should be encrypted",
+          "Description": "Athena databases and workspace result sets should be encrypted at rests. These databases and query sets are generally derived from data in S3 buckets and should have the same level of at rest protection.",
+          "Message": "Workgroup does not have encryption configured.",
+          "Query": "data..",
+          "Resolution": "Enable encryption at rest for Athena databases and workgroup configurations",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0006",
+          "References": [
+            "https://docs.aws.amazon.com/athena/latest/ug/encryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0006"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:420-434",
+            "Provider": "AWS",
+            "Service": "athena",
+            "StartLine": 420,
+            "EndLine": 434,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 420,
+                  "Content": "  AthenaWorkGroupPrimary:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mAthenaWorkGroupPrimary\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 421,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 422,
+                  "Content": "    Type: \"AWS::Athena::WorkGroup\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::Athena::WorkGroup\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 423,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 424,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 425,
+                  "Content": "      WorkGroupConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mWorkGroupConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 426,
+                  "Content": "        RequesterPaysEnabled: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRequesterPaysEnabled\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 427,
+                  "Content": "        EnforceWorkGroupConfiguration: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mEnforceWorkGroupConfiguration\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 428,
+                  "Content": "        EngineVersion:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mEngineVersion\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 429,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0007",
+          "AVDID": "AVD-AWS-0007",
+          "Title": "Athena workgroups should enforce configuration to prevent client disabling encryption",
+          "Description": "Athena workgroup configuration should be enforced to prevent client side changes to disable encryption settings.",
+          "Message": "The workgroup configuration is not enforced.",
+          "Query": "data..",
+          "Resolution": "Enforce the configuration to prevent client overrides",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0007",
+          "References": [
+            "https://docs.aws.amazon.com/athena/latest/ug/manage-queries-control-costs-with-workgroups.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0007"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "AthenaWorkGroupPrimary",
+            "Provider": "AWS",
+            "Service": "athena",
+            "StartLine": 427,
+            "EndLine": 427,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 420,
+                  "Content": "  AthenaWorkGroupPrimary:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mAthenaWorkGroupPrimary\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 421,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 427,
+                  "Content": "        EnforceWorkGroupConfiguration: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mEnforceWorkGroupConfiguration\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 433,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 434,
+                  "Content": "      Name: \"primary\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mName\u001b[0m: \u001b[38;5;37m\"primary\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "AthenaWorkGroupPrimary",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 420,
+                  "EndLine": 434
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0014",
+          "AVDID": "AVD-AWS-0014",
+          "Title": "Cloudtrail should be enabled in all regions regardless of where your AWS resources are generally homed",
+          "Description": "When creating Cloudtrail in the AWS Management Console the trail is configured by default to be multi-region, this isn't the case with the Terraform resource. Cloudtrail should cover the full AWS account to ensure you can track changes in regions you are not actively operting in.",
+          "Message": "Trail is not enabled across all regions.",
+          "Query": "data..",
+          "Resolution": "Enable Cloudtrail in all regions",
+          "Severity": "MEDIUM",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0014",
+          "References": [
+            "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/receive-cloudtrail-log-files-from-multiple-regions.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0014"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "CloudTrailTrailPolystudenttrail",
+            "Provider": "AWS",
+            "Service": "cloudtrail",
+            "StartLine": 891,
+            "EndLine": 891,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 876,
+                  "Content": "  CloudTrailTrailPolystudenttrail:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mCloudTrailTrailPolystudenttrail\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 877,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 891,
+                  "Content": "      IsMultiRegionTrail: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mIsMultiRegionTrail\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 899,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 900,
+                  "Content": "      IsLogging: true",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mIsLogging\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "CloudTrailTrailPolystudenttrail",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 876,
+                  "EndLine": 900
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0015",
+          "AVDID": "AVD-AWS-0015",
+          "Title": "CloudTrail should use Customer managed keys to encrypt the logs",
+          "Description": "Using Customer managed keys provides comprehensive control over cryptographic keys, enabling management of policies, permissions, and rotation, thus enhancing security and compliance measures for sensitive data and systems.",
+          "Message": "CloudTrail does not use a customer managed key to encrypt the logs.",
+          "Query": "data..",
+          "Resolution": "Use Customer managed key",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0015",
+          "References": [
+            "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html",
+            "https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-mgmt",
+            "https://avd.aquasec.com/misconfig/avd-aws-0015"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:876-900",
+            "Provider": "AWS",
+            "Service": "cloudtrail",
+            "StartLine": 876,
+            "EndLine": 900,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 876,
+                  "Content": "  CloudTrailTrailPolystudenttrail:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mCloudTrailTrailPolystudenttrail\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 877,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 878,
+                  "Content": "    Type: \"AWS::CloudTrail::Trail\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::CloudTrail::Trail\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 879,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 880,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 881,
+                  "Content": "      IncludeGlobalServiceEvents: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mIncludeGlobalServiceEvents\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 882,
+                  "Content": "      EventSelectors:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mEventSelectors\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 883,
+                  "Content": "      - IncludeManagementEvents: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      - \u001b[38;5;33mIncludeManagementEvents\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 884,
+                  "Content": "        DataResources:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mDataResources\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 885,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0026",
+          "AVDID": "AVD-AWS-0026",
+          "Title": "EBS volumes must be encrypted",
+          "Description": "By enabling encryption on EBS volumes you protect the volume, the disk I/O and any derived snapshots from compromise if intercepted.",
+          "Message": "EBS volume is not encrypted.",
+          "Query": "data..",
+          "Resolution": "Enable encryption of EBS volumes",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0026",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0026"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2Volume",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 753,
+            "EndLine": 753,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 745,
+                  "Content": "  EC2Volume:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;33mEC2Volume\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 746,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 753,
+                  "Content": "      Encrypted: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mEncrypted\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 758,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 759,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2Volume",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 745,
+                  "EndLine": 759
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0027",
+          "AVDID": "AVD-AWS-0027",
+          "Title": "EBS volume encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your EBS volume. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+          "Message": "EBS volume does not use a customer-managed KMS key.",
+          "Query": "data..",
+          "Resolution": "Enable encryption using customer managed keys",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0027",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0027"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:745-759",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 745,
+            "EndLine": 759,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 745,
+                  "Content": "  EC2Volume:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;33mEC2Volume\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 746,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 747,
+                  "Content": "    Type: \"AWS::EC2::Volume\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::EC2::Volume\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 748,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 749,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 750,
+                  "Content": "      MultiAttachEnabled: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMultiAttachEnabled\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 751,
+                  "Content": "      SnapshotId: \"snap-0ea2b465cc56e487c\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mSnapshotId\u001b[0m: \u001b[38;5;37m\"snap-0ea2b465cc56e487c\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 752,
+                  "Content": "      VolumeType: \"gp2\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mVolumeType\u001b[0m: \u001b[38;5;37m\"gp2\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 753,
+                  "Content": "      Encrypted: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mEncrypted\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 754,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0028",
+          "AVDID": "AVD-AWS-0028",
+          "Title": "aws_instance should activate session tokens for Instance Metadata Service.",
+          "Description": "\nIMDS v2 (Instance Metadata Service) introduced session authentication tokens which improve security when talking to IMDS.\nBy default \u003ccode\u003eaws_instance\u003c/code\u003e resource sets IMDS session auth tokens to be optional. \nTo fully protect IMDS you need to enable session tokens by using \u003ccode\u003emetadata_options\u003c/code\u003e block and its \u003ccode\u003ehttp_tokens\u003c/code\u003e variable set to \u003ccode\u003erequired\u003c/code\u003e.\n",
+          "Message": "Instance does not require IMDS access to require a token",
+          "Query": "data..",
+          "Resolution": "Enable HTTP token requirement for IMDS",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0028",
+          "References": [
+            "https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service",
+            "https://avd.aquasec.com/misconfig/avd-aws-0028"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:276-324",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 276,
+            "EndLine": 324,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 276,
+                  "Content": "  EC2Instance:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2Instance\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 277,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 278,
+                  "Content": "    Type: \"AWS::EC2::Instance\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::EC2::Instance\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 279,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 280,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 281,
+                  "Content": "      Tenancy: \"default\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mTenancy\u001b[0m: \u001b[38;5;37m\"default\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 282,
+                  "Content": "      PrivateIpAddress: \"10.0.1.87\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPrivateIpAddress\u001b[0m: \u001b[38;5;37m\"10.0.1.87\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 283,
+                  "Content": "      InstanceInitiatedShutdownBehavior: \"stop\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mInstanceInitiatedShutdownBehavior\u001b[0m: \u001b[38;5;37m\"stop\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 284,
+                  "Content": "      BlockDeviceMappings:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mBlockDeviceMappings\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 285,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "s3-bucket-logging",
+          "AVDID": "AVD-AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/s3-bucket-logging",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://avd.aquasec.com/misconfig/s3-bucket-logging"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:216-237",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 216,
+            "EndLine": 237,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 216,
+                  "Content": "  S3BucketTp4polystudents2051559logs:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559logs\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 217,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 218,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 219,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 220,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 221,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 222,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 223,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 224,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 225,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "s3-bucket-logging",
+          "AVDID": "AVD-AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/s3-bucket-logging",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://avd.aquasec.com/misconfig/s3-bucket-logging"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:353-388",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 353,
+            "EndLine": 388,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 353,
+                  "Content": "  S3BucketTp4polystudents2051559:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 354,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 355,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 356,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 357,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 358,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 359,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 360,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 361,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 362,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "s3-bucket-logging",
+          "AVDID": "AVD-AWS-0089",
+          "Title": "S3 Bucket Logging",
+          "Description": "Ensures S3 bucket logging is enabled for S3 buckets",
+          "Message": "Bucket has logging disabled",
+          "Namespace": "builtin.aws.s3.aws0089",
+          "Query": "data.builtin.aws.s3.aws0089.deny",
+          "Resolution": "Add a logging block to the resource to enable access logging",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/s3-bucket-logging",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html",
+            "https://avd.aquasec.com/misconfig/s3-bucket-logging"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:779-800",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 779,
+            "EndLine": 800,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 779,
+                  "Content": "  S3BucketTp4polystudents2051559back:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559back\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 780,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 781,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 782,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 783,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 784,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 785,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 786,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 787,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 788,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0104",
+          "AVDID": "AVD-AWS-0104",
+          "Title": "An egress security group rule allows traffic to /0.",
+          "Description": "Opening up ports to connect out to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that are explicitly required where possible.",
+          "Message": "Security group rule allows egress to multiple public internet addresses.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0104",
+          "References": [
+            "https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-egress-to-internet.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0104"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 667,
+            "EndLine": 667,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 667,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 626,
+            "EndLine": 626,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 626,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 641,
+            "EndLine": 641,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 641,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 656,
+            "EndLine": 656,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 656,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 651,
+            "EndLine": 651,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 651,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 646,
+            "EndLine": 646,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 646,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 636,
+            "EndLine": 636,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 636,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 631,
+            "EndLine": 631,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 631,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 661,
+            "EndLine": 661,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 661,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 621,
+            "EndLine": 621,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 621,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 616,
+            "EndLine": 616,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 616,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0107",
+          "AVDID": "AVD-AWS-0107",
+          "Title": "An ingress security group rule allows traffic from /0.",
+          "Description": "Opening up ports to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that explicitly require it where possible.",
+          "Message": "Security group rule allows ingress from public internet.",
+          "Query": "data..",
+          "Resolution": "Set a more restrictive cidr range",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0107",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0107"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 611,
+            "EndLine": 611,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 611,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "\"0.0.0.0/0\"",
+                  "Truncated": false,
+                  "Highlighted": "      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0124",
+          "AVDID": "AVD-AWS-0124",
+          "Title": "Missing description for security group rule.",
+          "Description": "Security group rules should include a description for auditing purposes.\n\nSimplifies auditing, debugging, and managing security groups.",
+          "Message": "Security group rule does not have a description.",
+          "Query": "data..",
+          "Resolution": "Add descriptions for all security groups rules",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0124",
+          "References": [
+            "https://www.cloudconformity.com/knowledge-base/aws/EC2/security-group-rules-description.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0124"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SecurityGroup",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 667,
+            "EndLine": 670,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 601,
+                  "Content": "  EC2SecurityGroup:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SecurityGroup\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 602,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 667,
+                  "Content": "      - CidrIp: \"0.0.0.0/0\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      - \u001b[38;5;33mCidrIp\u001b[0m: \u001b[38;5;37m\"0.0.0.0/0\"",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 668,
+                  "Content": "        IpProtocol: \"-1\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIpProtocol\u001b[0m: \u001b[38;5;37m\"-1\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 669,
+                  "Content": "        FromPort: -1",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mFromPort\u001b[0m: -\u001b[38;5;37m1",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 670,
+                  "Content": "        ToPort: -1",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mToPort\u001b[0m: -\u001b[38;5;37m1",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 672,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 673,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SecurityGroup",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 601,
+                  "EndLine": 673
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0131",
+          "AVDID": "AVD-AWS-0131",
+          "Title": "Instance with unencrypted block device.",
+          "Description": "Block devices should be encrypted to ensure sensitive data is held securely at rest.",
+          "Message": "Root block device is not encrypted.",
+          "Query": "data..",
+          "Resolution": "Turn on encryption for all block devices",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0131",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0131"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2Instance",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 290,
+            "EndLine": 290,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 276,
+                  "Content": "  EC2Instance:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2Instance\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 277,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 290,
+                  "Content": "          Encrypted: false",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m          \u001b[38;5;33mEncrypted\u001b[0m: \u001b[38;5;166mfalse",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 323,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 324,
+                  "Content": "        CPUCredits: \"standard\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mCPUCredits\u001b[0m: \u001b[38;5;37m\"standard\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2Instance",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 276,
+                  "EndLine": 324
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0132",
+          "AVDID": "AVD-AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Query": "data..",
+          "Resolution": "Enable encryption using customer managed keys",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0132"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:216-237",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 216,
+            "EndLine": 237,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 216,
+                  "Content": "  S3BucketTp4polystudents2051559logs:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559logs\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 217,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 218,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 219,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 220,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 221,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 222,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 223,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 224,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 225,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0132",
+          "AVDID": "AVD-AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Query": "data..",
+          "Resolution": "Enable encryption using customer managed keys",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0132"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:353-388",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 353,
+            "EndLine": 388,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 353,
+                  "Content": "  S3BucketTp4polystudents2051559:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 354,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 355,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 356,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 357,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 358,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 359,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 360,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 361,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 362,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0132",
+          "AVDID": "AVD-AWS-0132",
+          "Title": "S3 encryption should use Customer Managed Keys",
+          "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+          "Message": "Bucket does not encrypt data with a customer managed key.",
+          "Query": "data..",
+          "Resolution": "Enable encryption using customer managed keys",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0132",
+          "References": [
+            "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html",
+            "https://avd.aquasec.com/misconfig/avd-aws-0132"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:779-800",
+            "Provider": "AWS",
+            "Service": "s3",
+            "StartLine": 779,
+            "EndLine": 800,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 779,
+                  "Content": "  S3BucketTp4polystudents2051559back:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mS3BucketTp4polystudents2051559back\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 780,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 781,
+                  "Content": "    Type: \"AWS::S3::Bucket\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::S3::Bucket\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 782,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 783,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 784,
+                  "Content": "      AbacStatus: \"Disabled\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mAbacStatus\u001b[0m: \u001b[38;5;37m\"Disabled\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 785,
+                  "Content": "      PublicAccessBlockConfiguration:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mPublicAccessBlockConfiguration\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 786,
+                  "Content": "        RestrictPublicBuckets: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "        \u001b[38;5;33mRestrictPublicBuckets\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 787,
+                  "Content": "        IgnorePublicAcls: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mIgnorePublicAcls\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 788,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0162",
+          "AVDID": "AVD-AWS-0162",
+          "Title": "CloudTrail logs should be stored in S3 and also sent to CloudWatch Logs",
+          "Description": "\nCloudTrail is a web service that records AWS API calls made in a given account. The recorded information includes the identity of the API caller, the time of the API call, the source IP address of the API caller, the request parameters, and the response elements returned by the AWS service.\n\nCloudTrail uses Amazon S3 for log file storage and delivery, so log files are stored durably. In addition to capturing CloudTrail logs in a specified Amazon S3 bucket for long-term analysis, you can perform real-time analysis by configuring CloudTrail to send logs to CloudWatch Logs.\n\nFor a trail that is enabled in all Regions in an account, CloudTrail sends log files from all those Regions to a CloudWatch Logs log group.\n",
+          "Message": "Trail does not have CloudWatch logging configured",
+          "Query": "data..",
+          "Resolution": "Enable logging to CloudWatch",
+          "Severity": "LOW",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0162",
+          "References": [
+            "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/send-cloudtrail-events-to-cloudwatch-logs.html#send-cloudtrail-events-to-cloudwatch-logs-console",
+            "https://avd.aquasec.com/misconfig/avd-aws-0162"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "lab4-template-template-1765223827835.yaml:876-900",
+            "Provider": "AWS",
+            "Service": "cloudtrail",
+            "StartLine": 876,
+            "EndLine": 900,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 876,
+                  "Content": "  CloudTrailTrailPolystudenttrail:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mCloudTrailTrailPolystudenttrail\u001b[0m:",
+                  "FirstCause": true,
+                  "LastCause": false
+                },
+                {
+                  "Number": 877,
+                  "Content": "    UpdateReplacePolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "    \u001b[38;5;33mUpdateReplacePolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 878,
+                  "Content": "    Type: \"AWS::CloudTrail::Trail\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mType\u001b[0m: \u001b[38;5;37m\"AWS::CloudTrail::Trail\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 879,
+                  "Content": "    DeletionPolicy: \"Retain\"",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mDeletionPolicy\u001b[0m: \u001b[38;5;37m\"Retain\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 880,
+                  "Content": "    Properties:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m    \u001b[38;5;33mProperties\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 881,
+                  "Content": "      IncludeGlobalServiceEvents: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mIncludeGlobalServiceEvents\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 882,
+                  "Content": "      EventSelectors:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mEventSelectors\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 883,
+                  "Content": "      - IncludeManagementEvents: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      - \u001b[38;5;33mIncludeManagementEvents\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 884,
+                  "Content": "        DataResources:",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mDataResources\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": true
+                },
+                {
+                  "Number": 885,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            }
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2Subnet",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 587,
+            "EndLine": 587,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 582,
+                  "Content": "  EC2Subnet:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2Subnet\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 583,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 587,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 599,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 600,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2Subnet",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 582,
+                  "EndLine": 600
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetA9",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 553,
+            "EndLine": 553,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 548,
+                  "Content": "  EC2SubnetA9:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SubnetA9\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 549,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 553,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 563,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 564,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetA9",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 548,
+                  "EndLine": 564
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetBw",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 806,
+            "EndLine": 806,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 801,
+                  "Content": "  EC2SubnetBw:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SubnetBw\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 802,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 806,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 816,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 817,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetBw",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 801,
+                  "EndLine": 817
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetFf",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 177,
+            "EndLine": 177,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 172,
+                  "Content": "  EC2SubnetFf:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SubnetFf\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 173,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 177,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 187,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 188,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetFf",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 172,
+                  "EndLine": 188
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetGa",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 733,
+            "EndLine": 733,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 728,
+                  "Content": "  EC2SubnetGa:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SubnetGa\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 729,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 733,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 743,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 744,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetGa",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 728,
+                  "EndLine": 744
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetSS",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 194,
+            "EndLine": 194,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 189,
+                  "Content": "  EC2SubnetSS:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;33mEC2SubnetSS\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 190,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 194,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 204,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 205,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetSS",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 189,
+                  "EndLine": 205
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetUG",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 679,
+            "EndLine": 679,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 674,
+                  "Content": "  EC2SubnetUG:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m  \u001b[38;5;33mEC2SubnetUG\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 675,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 679,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 689,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 690,
+                  "Content": "      Tags: []",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m      \u001b[38;5;33mTags\u001b[0m: []",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetUG",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 674,
+                  "EndLine": 690
+                }
+              }
+            ]
+          }
+        },
+        {
+          "Type": "CloudFormation Security Check",
+          "ID": "AVD-AWS-0164",
+          "AVDID": "AVD-AWS-0164",
+          "Title": "Instances in a subnet should not receive a public IP address by default.",
+          "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+          "Message": "Subnet associates public IP address.",
+          "Query": "data..",
+          "Resolution": "Set the instance to not be publicly accessible",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/avd-aws-0164",
+          "References": [
+            "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses",
+            "https://avd.aquasec.com/misconfig/avd-aws-0164"
+          ],
+          "Status": "FAIL",
+          "Layer": {},
+          "CauseMetadata": {
+            "Resource": "EC2SubnetWp",
+            "Provider": "AWS",
+            "Service": "ec2",
+            "StartLine": 765,
+            "EndLine": 765,
+            "Code": {
+              "Lines": [
+                {
+                  "Number": 760,
+                  "Content": "  EC2SubnetWp:",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "  \u001b[38;5;33mEC2SubnetWp\u001b[0m:",
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 761,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 765,
+                  "Content": "      MapPublicIpOnLaunch: true",
+                  "IsCause": true,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "      \u001b[38;5;33mMapPublicIpOnLaunch\u001b[0m: \u001b[38;5;166mtrue",
+                  "FirstCause": true,
+                  "LastCause": true
+                },
+                {
+                  "Number": 777,
+                  "Content": "",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": true,
+                  "FirstCause": false,
+                  "LastCause": false
+                },
+                {
+                  "Number": 778,
+                  "Content": "        Key: \"Name\"",
+                  "IsCause": false,
+                  "Annotation": "",
+                  "Truncated": false,
+                  "Highlighted": "\u001b[0m        \u001b[38;5;33mKey\u001b[0m: \u001b[38;5;37m\"Name\"",
+                  "FirstCause": false,
+                  "LastCause": false
+                }
+              ]
+            },
+            "Occurrences": [
+              {
+                "Resource": "EC2SubnetWp",
+                "Filename": "lab4-template-template-1765223827835.yaml",
+                "Location": {
+                  "StartLine": 760,
+                  "EndLine": 778
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

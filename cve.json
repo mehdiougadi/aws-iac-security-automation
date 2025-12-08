@@ -1,0 +1,87 @@
+[
+  {
+    "Description": "Athena databases and workspace result sets should be encrypted at rests. These databases and query sets are generally derived from data in S3 buckets and should have the same level of at rest protection.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0006"
+  },
+  {
+    "Description": "Athena workgroup configuration should be enforced to prevent client side changes to disable encryption settings.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0007"
+  },
+  {
+    "Description": "Using Customer managed keys provides comprehensive control over cryptographic keys, enabling management of policies, permissions, and rotation, thus enhancing security and compliance measures for sensitive data and systems.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0015"
+  },
+  {
+    "Description": "By enabling encryption on EBS volumes you protect the volume, the disk I/O and any derived snapshots from compromise if intercepted.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0026"
+  },
+  {
+    "Description": "\nIMDS v2 (Instance Metadata Service) introduced session authentication tokens which improve security when talking to IMDS.\nBy default <code>aws_instance</code> resource sets IMDS session auth tokens to be optional. \nTo fully protect IMDS you need to enable session tokens by using <code>metadata_options</code> block and its <code>http_tokens</code> variable set to <code>required</code>.\n",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0028"
+  },
+  {
+    "Description": "Block devices should be encrypted to ensure sensitive data is held securely at rest.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0131"
+  },
+  {
+    "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0132"
+  },
+  {
+    "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0132"
+  },
+  {
+    "Description": "Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0132"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  },
+  {
+    "Description": "You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.",
+    "Severity": "HIGH",
+    "ID": "AVD-AWS-0164"
+  }
+]
