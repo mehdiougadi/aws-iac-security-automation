@@ -757,9 +757,22 @@ def main():
 
     flow_log_id = createVPCFlowLog(vpc_id, bucket_name, 'polystudent-flowlog')
 
-    instance_name = 'WebInstanceAZ1'
-    instance_id = createEC2Instance(public_subnet_az1, security_group_id, instance_name)
-    createCloudWatchAlarm(instance_id, instance_name)
+    # 3.2 Create 4 instances (2 public, 2 private)
+    instance_pub1_name = 'WebInstanceAZ1'
+    instance_pub1_id = createEC2Instance(public_subnet_az1, security_group_id, instance_pub1_name)
+    createCloudWatchAlarm(instance_pub1_id, instance_pub1_name)
+
+    instance_pub2_name = 'WebInstanceAZ2'
+    instance_pub2_id = createEC2Instance(public_subnet_az2, security_group_id, instance_pub2_name)
+    createCloudWatchAlarm(instance_pub2_id, instance_pub2_name)
+
+    instance_priv1_name = 'DbInstanceAZ1'
+    instance_priv1_id = createEC2Instance(private_subnet_az1, security_group_id, instance_priv1_name)
+    createCloudWatchAlarm(instance_priv1_id, instance_priv1_name)
+
+    instance_priv2_name = 'DbInstanceAZ2'
+    instance_priv2_id = createEC2Instance(private_subnet_az2, security_group_id, instance_priv2_name)
+    createCloudWatchAlarm(instance_priv2_id, instance_priv2_name)
 
     print('*'*50 + '\n')
     print('*'*14 + ' Result for Exercise 1  ' + '*'*12)
@@ -787,8 +800,11 @@ def main():
     print(f'VPC Flow Log ID: {flow_log_id}')
     
     print('-'*22 + ' 3.2  ' + '-'*22)
-    print(f'Instance ID: {instance_id}')
-    print(f'CloudWatch Alarm created for {instance_id}')
+    print(f'Public Instance AZ1 ID: {instance_pub1_id}')
+    print(f'Public Instance AZ2 ID: {instance_pub2_id}')
+    print(f'Private Instance AZ1 ID: {instance_priv1_id}')
+    print(f'Private Instance AZ2 ID: {instance_priv2_id}')
+    print('CloudWatch Alarms created for all 4 instances')
     print('-'*50)
 
     print('-'*22 + ' 3.3  ' + '-'*22)
